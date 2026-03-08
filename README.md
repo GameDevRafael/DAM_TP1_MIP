@@ -3,7 +3,7 @@
 Course: Desenvolvimento de Aplicações Móveis (DAM)
 Student(s): A51394 Rafael Faustino
 Date: 2026
-Repository URL: https://github.com/GameDevRafael/DAM_TP1
+Repository URL: https://github.com/GameDevRafael/DAM_TP1_MIP
 
 ## 1. Introduction
 O objetivo deste trabalho é criar o "VaultGuard". É uma aplicação para Android que serve como um gestor de palavras-passe local. O problema que tentamos resolver é a dificuldade que as pessoas têm para guardar e lembrar dezenas de palavras-passe seguras. A aplicação ajuda a guardar todas as passwords de forma muito segura no telemóvel e também ajuda a criar palavras-passe novas e fortes.
