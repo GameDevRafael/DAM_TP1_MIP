@@ -1,4 +1,4 @@
-# Assignment X — VaultGuard
+# Assignment 8 — VaultGuard
 
 Course: Desenvolvimento de Aplicações Móveis (DAM)
 Student(s): A51394 Rafael Faustino
