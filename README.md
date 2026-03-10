@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# Tutorial 1 — MIP: VaultGuard
-=======
 # Assignment 4 — MIP: VaultGuard
->>>>>>> 19502ed5b0bf007f80376c7205dfe5079436c0fa
 
 **Course:** Desenvolvimento de Aplicações Móveis (DAM)  
 **Student:** A51394 Rafael Faustino  
