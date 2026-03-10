@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Tutorial 1 — MIP: VaultGuard
+=======
+# Assignment 4 — MIP: VaultGuard
+>>>>>>> 19502ed5b0bf007f80376c7205dfe5079436c0fa
 
 **Course:** Desenvolvimento de Aplicações Móveis (DAM)  
 **Student:** A51394 Rafael Faustino  
@@ -259,4 +263,8 @@ Este projeto foi desenvolvido com assistência obrigatória de ferramentas de in
 O aluno compreende o código gerado, é capaz de o explicar, e assume total responsabilidade pelo produto final. O código foi verificado e testado manualmente.
 
 **Relatório: [AC YES, AI YES]**  
+<<<<<<< HEAD
 A redação e estruturação deste relatório foi assistida pelo modelo **Claude (Anthropic)**. O aluno é totalmente responsável pelo conteúdo apresentado e confirma que o mesmo reflete com rigor o trabalho desenvolvido.
+=======
+A redação e estruturação deste relatório foi assistida pelo modelo **Claude (Anthropic)**. O aluno é totalmente responsável pelo conteúdo apresentado e confirma que o mesmo reflete com rigor o trabalho desenvolvido.
+>>>>>>> 19502ed5b0bf007f80376c7205dfe5079436c0fa
