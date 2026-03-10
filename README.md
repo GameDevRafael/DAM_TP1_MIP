@@ -1,81 +1,262 @@
-# Assignment X — VaultGuard
+# Tutorial 1 — MIP: VaultGuard
 
-Course: Desenvolvimento de Aplicações Móveis (DAM)
-Student(s): A51394 Rafael Faustino
-Date: 2026
-Repository URL: https://github.com/GameDevRafael/DAM_TP1
+**Course:** Desenvolvimento de Aplicações Móveis (DAM)  
+**Student:** A51394 Rafael Faustino  
+**Date:** 10/03/2026  
+**Repository URL:** https://github.com/GameDevRafael/DAM_TP1_MIP
 
-## 1. Introduction
-O objetivo deste trabalho é criar o "VaultGuard". É uma aplicação para Android que serve como um gestor de palavras-passe local. O problema que tentamos resolver é a dificuldade que as pessoas têm para guardar e lembrar dezenas de palavras-passe seguras. A aplicação ajuda a guardar todas as passwords de forma muito segura no telemóvel e também ajuda a criar palavras-passe novas e fortes.
+---
 
-## 2. System Overview
-A aplicação permite ao utilizador criar um "cofre" que é fechado e protegido por um PIN principal. Lá dentro, ele pode ver as suas contas, adicionar contas novas, editar ou apagar as que já não usa. Também tem um gerador de passwords. Uma parte porreira do projeto é que a app consegue ir à internet ver se uma palavra-passe sofreu uma fuga de dados, usando a API do "Have I Been Pwned".
+## 1. Introdução
 
-## 3. Architecture and Design
-Eu usei a arquitetura MVVM (Model-View-ViewModel). Escolhi esta arquitetura porque separa bem o desenho do ecrã e as regras do programa.
-- **Fragments e XML**: Tratam só da imagem e de apanhar os cliques do utilizador.
-- **ViewModels**: Guardam os dados enquanto o ecrã muda de forma e enviam as ordens para a base de dados.
-- **Repositories**: Fazem a ponte entre a aplicação e a base de dados ou internet.
-- A app está toda dividida em pastas principais (`data`, `di`, `ui`, `utils`) para ficar mais arrumada e ser fácil achar tudo o que preciso.
+A aplicação VaultGuard surge no contexto da secção 8 — MIP (Mission Impossible Possible) do Tutorial 1 da unidade curricular de Desenvolvimento de Aplicações Móveis. Esta secção foca-se na colaboração estratégica entre o desenvolvedor e ferramentas de Inteligência Artificial para a criação de uma solução robusta e funcional.
 
-## 4. Implementation
-Os bocados mais importantes do projeto são:
-- **Base de Dados**: Usei a biblioteca Room. Eu criei a tabela `PasswordEntry`. Mas, antes de gravar, todas as senhas, notas e nomes de utilizador são encriptados usando a biblioteca `Security Crypto` e o Android Keystore. Assim, os dados não ficam visíveis no disco.
-- **API (Rede)**: Usei o Retrofit para perguntar ao "Have I Been Pwned" se a password é segura. Para a enviar com segurança, usamos o "k-Anonymity" (só enviamos os primeiros 5 caracteres de um tipo de código chamado SHA-1).
-- **Lista de Passwords**: Para apresentar muitas passwords, usei a clássica `RecyclerView` com um `VaultAdapter` e um menu flutuante.
-- **Injeção de Dependências**: Usei o Dagger Hilt para inicializar as classes e fazer a ligação do ViewModel com a base de dados de forma automática.
+O projeto consiste num gestor de passwords offline, motivado pela crescente necessidade de segurança digital e privacidade de dados. Os objetivos principais incluem:
 
-## 5. Testing and Validation
-Para testar o programa liguei a aplicação no meu emulador e fui testando tudo passo a passo.
-Os testes basearam-se em ver se:
-- O registo do PIN pela primeira vez não falha.
-- Se meter o PIN errado 3 vezes, ele não deixa entrar no cofre principal.
-- Editar e apagar muda realmente os dados que aparecem na janela (CRUD completo).
-- Clicar para mostrar a password escondida no campo "Password" em vez de mostrar "***" funciona.
-Limitação: se o telemóvel formatar ou o utilizador se esquecer do PIN, perde acesso ao cofre, porque não guardamos os dados de ninguem em servidores online e está tudo barrado.
+- Implementação de criptografia de nível militar (AES-GCM)
+- Verificação de integridade de credenciais através de APIs externas
+- Exploração de fluxos de autenticação segura no ecossistema Android
 
-## 6. Usage Instructions
-Para testar e correr este projeto no seu computador:
-- Precisa de instalar ou usar o **Android Studio** (versão recomedanda Iguana ou superior).
-- Fazer Clone do repositório ou abrir a pasta `VaultGuard` através do IDE.
-- O IDE vai pedir para fazer o "Sync Project with Gradle Files", clique OK.
-- Selecione o emulador em cima (com Android versão 8.0 Oreo ou superior) e carregue no botão verde "Run".
+A escolha desta aplicação justifica-se pela complexidade técnica exigida pela gestão de dados sensíveis, que permite testar os limites das capacidades de geração de código e assistência arquitetural da IA.
+
+## 2. Visão Geral do Sistema
+
+O VaultGuard é uma solução de gestão de credenciais que prioriza a segurança local. O sistema implementa um cofre digital protegido por um PIN mestre, cifrado através de SHA-256 e armazenado em *EncryptedSharedPreferences*.
+
+### Funcionalidades Principais
+
+| Funcionalidade | Descrição |
+|---|---|
+| Armazenamento cifrado | Guarda título, utilizador, password e notas com cifragem AES-GCM |
+| Gerador de passwords | Geração segura com parâmetros configuráveis |
+| Auditoria de segurança | Deteção de passwords comprometidas via API *HaveIBeenPwned* |
+
+A aplicação utiliza o modelo de K-Anonimato para consultas externas, garantindo que a password real nunca abandona o dispositivo. Os serviços externos limitam-se à integração com a API *HaveIBeenPwned* para auditoria de segurança das credenciais guardadas.
+
+## 3. Arquitetura e Design
+
+A solução adota a arquitetura MVVM (Model-View-ViewModel), recomendada pela Google para projetos Android modernos. Esta decisão facilita a separação de responsabilidades e a testabilidade do código.
+
+### Estrutura do Projeto
+
+```
+app/src/main/
+├── data/
+│   ├── local/          # Room + EncryptedSharedPreferences
+│   ├── remote/         # Retrofit + HaveIBeenPwned API
+│   ├── repository/     # VaultRepository
+│   └── crypto/         # CryptoManager (AndroidKeyStore + AES-GCM)
+├── ui/
+│   ├── login/          # Autenticação por PIN mestre
+│   ├── vault/          # Listagem de entradas
+│   ├── entry/          # Criação e edição de credenciais
+│   └── generator/      # Gerador de passwords
+└── di/                 # Dependency Injection com Hilt
+```
+
+### Padrões de Design Utilizados
+
+| Padrão | Aplicação |
+|---|---|
+| Repository Pattern | Abstração da fonte de dados |
+| Singleton | Gestores globais como `CryptoManager` |
+| Observer Pattern | Kotlin Flows para atualização dinâmica da UI |
+
+A arquitetura foi proposta pelo agente de IA, aprovada pelo aluno após revisão do plano de implementação, e validada para garantir a conformidade com as melhores práticas de desenvolvimento Android.
+
+## 4. Implementação
+
+### Tecnologias e Bibliotecas
+
+| Biblioteca | Função |
+|---|---|
+| Room (SQLite) | Persistência local com campos cifrados em Base64/AES-GCM |
+| Retrofit | Integração com a API HaveIBeenPwned |
+| Dagger-Hilt | Dependency Injection |
+| Jetpack Navigation | Navegação entre fragmentos |
+| Coroutines | Operações assíncronas |
+| Jetpack Security | EncryptedSharedPreferences |
+
+### Detalhe de Implementação
+
+A camada de persistência utiliza a biblioteca *Room* sobre uma base de dados SQLite, onde os campos sensíveis são guardados em formato Base64 após cifragem AES-GCM (256-bit). A lógica de negócio reside nos *ViewModels*, que interagem com o `VaultRepository`.
+
+A integração com a API externa é feita através de *Retrofit*, processando apenas os primeiros 5 caracteres do hash SHA-1 das passwords para manter o anonimato. O `CryptoManager.kt` demonstra a correta utilização do *AndroidKeyStore* para a gestão de chaves criptográficas de hardware.
+
+## 5. Testes e Validação
+
+A estratégia de testes centrou-se em validações manuais. Foram executados os seguintes cenários:
+
+| Cenário | Resultado |
+|---|---|
+| Persistência de dados após encerramento | ✓ Passou |
+| Decifragem correta de campos sensíveis | ✓ Passou |
+| Password sem fugas detetadas | ✓ Passou |
+| Password comprometida ("123456") | ✓ "Pwned 1439 times! Change it." |
+
+O sistema demonstrou estabilidade em emuladores com API level 36 e dispositivo físico com Android 13.
+
+## 6. Instruções de Utilização
+
+### Pré-requisitos
+
+- Android Studio (Jellyfish ou superior)
+- Android SDK para API 34
+- Dispositivo ou emulador com Android 8.0+
+
+### Clonar e Configurar
+
+```bash
+git clone https://github.com/GameDevRafael/DAM_TP1_MIP.git
+cd VaultGuard
+```
+
+1. Abrir o Android Studio e selecionar **File → Open**, apontando para a pasta `VaultGuard`
+2. Aguardar a sincronização do Gradle (`Build → Sync Project with Gradle Files`)
+3. Não são necessárias chaves de API — a *HaveIBeenPwned* é acedida através de um endpoint público
+4. Executar a aplicação com **Run → Run 'app'** (ou `Shift+F10`) num dispositivo com Android 8.0+
+
+### Resolução de Problemas Comuns
+
+```bash
+./gradlew clean build
+```
+
+Em caso de problemas com o *KeyStore*, reiniciar o emulador garante a correta inicialização.
 
 ---
 
 # Autonomous Software Engineering Sections
 
 ## 7. Prompting Strategy
-Pedi ajuda a uma Inteligência Artificial para fazer grande parte do código. Primeiro fiz "prompts" compridos a explicar a app e as tecnologias escolhidas (Kotlin, Room, MVVM e Material Design 3). Ao longo do desenvolvimento de cada ecrã fui fazendo prompts menores, tipo "cria-me o XML do gerador de passwords" ou "corrige esta cor que está errada do botão".
+
+O desenvolvimento utilizou o Google Antigravity (com modelo Gemini 1.5 Pro) e o Claude (Anthropic) via claude.ai. A estratégia de prompting foi definida com base no template fornecido pelo enunciado, estruturado em seis componentes:
+
+| Componente | Descrição |
+|---|---|
+| Context | Contexto do projeto e requisitos de segurança |
+| Goal | Objetivos funcionais da aplicação |
+| Constraints | Restrições arquiteturais explícitas (MVVM, Room, Retrofit, Hilt, Material Design 3, AES-GCM, HaveIBeenPwned) |
+| Plan | Plano de implementação para aprovação prévia |
+| Verification | Critérios de validação do código gerado |
+| Deliverables | Ficheiros e artefactos esperados |
+
+O prompt inicial foi elaborado com apoio do Claude, que ajudou a formular os requisitos técnicos de forma precisa antes de os submeter ao Antigravity. O agente foi configurado em modo Planning, o que o forçou a gerar um plano de implementação detalhado para aprovação antes de escrever qualquer código. Erros de compilação subsequentes foram reportados ao Antigravity em prompts de correção, colando o output de erro completo e solicitando a fix.
 
 ## 8. Autonomous Agent Workflow
-O agente inteligente ajudou na organização e fez logo de seguida uma listagem (um ficheiro Markdown de plano) do que ia fazer primeiro, base de dados, UI, etc. Quando o Android Studio dava algum erro chato a carregar os pacotes ou falhas no Gradle, eu dava "copy/paste" para a IA e ela ensinava os passos que tinha de modificar e escrevia a correção na hora.
+
+O Antigravity contribuiu em todas as fases do ciclo de desenvolvimento:
+
+**Planeamento:**  
+Gerou um documento `implementation_plan.md` com arquitetura, estrutura de pastas, dependências e estratégia de encriptação, revisto e aprovado pelo aluno antes de qualquer geração de código.
+
+**Implementação:**  
+Gerou os 37 ficheiros do projeto, incluindo toda a lógica de cifragem, os ViewModels, os Fragments, os layouts XML e a configuração do Hilt.
+
+**Debugging:**  
+Identificou e corrigiu autonomamente três problemas:
+
+| Problema | Solução |
+|---|---|
+| Incompatibilidade do Android Gradle Plugin com Data Binding | Atualização do AGP para 8.3.0 |
+| Dependências Hilt em falta | Adição das dependências em falta no Gradle |
+| Erros de sintaxe Kotlin no `VaultAdapter` e `VaultFragment` | Correção da sintaxe gerada |
+
+**Intervenção humana:**
+- Definir a ideia e os requisitos da app
+- Elaborar o prompt inicial com apoio do Claude
+- Aprovar o plano de implementação
+- Aceitar os ficheiros gerados
+- Reportar os erros de compilação ao agente
+- Solicitar correções visuais na interface (contraste dos labels dos switches e cor dos títulos das páginas)
 
 ## 9. Verification of AI-Generated Artifacts
-Sempre que a IA criava opções novas, eu copiava para os ficheiros originais pelo meu computador e construia a app. Via no emulador se o texto aparecia bem no ecrã e testava botões para ver se não rebentava (se a app fosse abaixo).
+
+O código gerado foi verificado através de testes manuais na app em execução e através de sessões de análise com o Claude. A verificação funcional incluiu:
+
+- Configuração do PIN mestre na primeira execução
+- Autenticação com PIN correto e rejeição de PIN errado
+- Criação e listagem de entradas no vault
+- Verificação de breach com password conhecidamente comprometida
+- Geração de passwords com diferentes configurações de caracteres
+
+A análise do código foi feita ficheiro a ficheiro com apoio do Claude para garantir compreensão da lógica de encriptação AES-GCM, do fluxo de k-anonimato no HaveIBeenPwned, e da arquitetura MVVM implementada.
 
 ## 10. Human vs AI Contribution
-A inteligência artificial programou grande parte dos processos do Kotlin atrás das cenas e construiu os ecrãs todos. A minha parte humana neste projeto foi escolher a ideia, delinear o caminho a tomar, dizer o que mudar se eu não gostasse de alguma parte visual e garantir que no final a app era montada toda numa só peça. Fui principalmente o gestor das ideias da IA.
+
+| Área | Responsável |
+|---|---|
+| Geração de código, encriptação, modelos de dados, ViewModels, Fragments, layouts XML | IA (Antigravity) |
+| Definição da ideia e requisitos | Humano |
+| Estruturação do prompt inicial | Humano (com apoio do Claude) |
+| Aprovação do plano de arquitetura | Humano |
+| Reporte de erros de compilação | Humano |
+| Melhorias visuais da interface | Humano |
+| Estudo e compreensão do código gerado | Humano (com apoio do Claude) |
 
 ## 11. Ethical and Responsible Use
-Havia sempre o problema da IA inventar formas com pouca segurança de proteção, uma vez que é um gestor de passwords. Por minha responsabilidade informei-a a usar os mecanismos mais dificeis e modernos disponíveis de criptografia (Keystore em vez de partilhas simples), e assegurei de que tudo tinha sido desenvolvido sem pôr em causa a vida e a privacidade do utilizador principal do VaultGuard.
+
+O uso de ferramentas de IA levanta questões importantes sobre responsabilidade e compreensão do código produzido. Os principais riscos identificados foram:
+
+| Risco | Mitigação |
+|---|---|
+| Código gerado que o aluno não consegue explicar | Sessões de estudo do código com apoio do Claude |
+| Incompatibilidades de versões de bibliotecas | Materializou-se e foi resolvido pelo próprio agente |
+
+O aluno assume a responsabilidade total pelo código produzido, reconhecendo que a IA serviu como agente de desenvolvimento, mas que a validação funcional, a aprovação arquitetural e a compreensão do produto final são da responsabilidade humana.
 
 ---
 
 # Development Process
 
 ## 12. Version Control and Commit History
-Durante o projeto a ferramenta que foi usada foi o Git. Quando a configuração inicial da app corria sem falhas fez-se um commit. Quando um dos ecrãs (Login, Gerador de senhas) acabavam sem bugs também se ia guardando e enviando para o GitHub para manter o registo seletivo do que foi evoluindo.
+
+O repositório utiliza uma única branch `main`, adequada para um projeto de dimensão individual com âmbito académico. Os commits foram realizados de forma incremental, refletindo a progressão do trabalho: primeiro a submissão do código do projeto MIP, seguida de iterações sucessivas sobre o relatório README.md à medida que o documento foi sendo refinado e completado.
+
+Cada commit de documentação correspondeu a uma melhoria concreta — atualização de informação do estudante, correção do URL do repositório, e revisão de linguagem. Esta abordagem, embora simples, garante rastreabilidade das alterações e separação entre a entrega do código e a evolução da documentação.
 
 ## 13. Difficulties and Lessons Learned
-A maior dificuldade foi afinar o Gradle, onde ocorreram muitas versões não compativeis no Kotlin que empancavam a compilação do Android (problemas com o DataBinding ou referências de ícones nos manifests). Aprendi bastante a forma de como as rotas nos ecrãs com o Jetpack Navigation funcionam sem necessitarmos de mais atividades pesadas.
+
+O principal desafio técnico foi a resolução de erros de compilação causados por incompatibilidades entre o Android Gradle Plugin e o sistema de Data Binding, que exigiu a atualização da versão do AGP para 8.3.0. Outra dificuldade residiu na configuração inicial do Android Studio, que não reconhecia o projeto Gradle por ter sido aberta a pasta errada.
+
+A aprendizagem mais relevante foi perceber que o valor do agente de IA não está apenas na geração de código, mas na capacidade de iterar rapidamente sobre erros — o que exige que o utilizador saiba identificar e comunicar os problemas corretamente.
+
+### Conceitos Técnicos Esclarecidos
+
+**AndroidKeyStore e ALIAS:**  
+A dúvida inicial era se cada entrada guardada no cofre tinha o seu próprio ALIAS. O Claude esclareceu que todas as entradas partilham a mesma chave criptográfica e que o ALIAS é apenas o nome pelo qual o KeyStore identifica essa chave. O que torna cada cifragem única não é a chave, mas o IV aleatório gerado em cada operação — dois campos cifrados com a mesma chave produzem resultados completamente diferentes precisamente por causa disso.
+
+**Base64:**  
+Não era claro porque é que os dados cifrados eram convertidos para Base64 antes de serem guardados. O Claude explicou que a cifragem produz bytes arbitrários que não são texto válido — alguns podem corromper uma string em SQLite. O Base64 converte qualquer sequência de bytes em caracteres seguros (A-Z, a-z, 0-9, +, /), tornando o resultado guardável em qualquer campo de texto, ao custo de ocupar cerca de 33% mais espaço.
+
+**`id` vs `title`:**  
+Havia a ideia errada de que o `id` no método `getEntryById` correspondia ao título da entrada. O `id` é um número inteiro gerado automaticamente pelo Room para cada linha da tabela (1, 2, 3...) e não tem qualquer relação com o título. O título é o campo `title` — texto separado. O `id` serve apenas para identificar unicamente cada linha na base de dados.
+
+### Aprendizagens sobre Trabalhar com IA
+
+Usar dois modelos com papéis distintos — Antigravity para gerar, Claude para explicar — revelou-se uma abordagem eficaz. O Antigravity gera rapidamente mas não explica; o Claude foi essencial para compreender o código gerado e formular prompts mais precisos. A combinação das duas ferramentas foi mais produtiva do que usar apenas uma.
 
 ## 14. Future Improvements
-Posso melhorar este projeto com:
-- Adicionar login por biometria (Aquele que põem o dedo) se o aparelho permitir.
-- Fazer cópias de segurança locais e de texto para colocar numa Drive ou passar pelo computador e se ter a forma de recuperar tudo de volta. 
+
+- **Autenticação biométrica:** Implementar via *BiometricPrompt* para substituição ou complemento do PIN
+- **Performance da RecyclerView:** Otimização com *DiffUtil* para atualizações incrementais da lista
+- **Testes unitários:** Implementação via *JUnit* para cobertura da lógica de negócio
+- **UI/UX:** Modo escuro dinâmico e animações nas transições entre fragmentos
+- **Cópias de segurança:** Exportação cifrada como objetivo a médio prazo
 
 ---
 
-## 15. AI Usage Disclosure
-Neste trabalho acadêmico declare-se a utilização considerável de modelos de Inteligência artificial no âmbito de Autonomous Software Engineering. Contudo todo os conteúdos submetidos para o projeto bem as verificações em conformidade mantêm-se da plena responsabilidade única pelo próprio aluno, conforme todos os preceitos de conduta previstos.
+## 15. AI Usage Disclosure (Mandatory)
+
+**Código: [AC YES, AI YES]**  
+Este projeto foi desenvolvido com assistência obrigatória de ferramentas de inteligência artificial, conforme requerido pela secção 8 (MIP) do Tutorial 1. Ferramentas utilizadas:
+
+| Ferramenta | Utilização |
+|---|---|
+| **Google Antigravity** (Gemini 1.5 Pro) | Geração do código, arquitetura e correção de erros de compilação |
+| **Claude (Anthropic)** via claude.ai | Apoio na formulação do prompt inicial, explicação dos ficheiros gerados e estudo do código |
+
+O aluno compreende o código gerado, é capaz de o explicar, e assume total responsabilidade pelo produto final. O código foi verificado e testado manualmente.
+
+**Relatório: [AC YES, AI YES]**  
+A redação e estruturação deste relatório foi assistida pelo modelo **Claude (Anthropic)**. O aluno é totalmente responsável pelo conteúdo apresentado e confirma que o mesmo reflete com rigor o trabalho desenvolvido.

@@ -68,9 +68,8 @@ class VaultFragment : Fragment() {
         }
     }
 
-    // carrega os itens de menu definidos no XML vault_menu.xml para a toolbar
+    // configura os itens de menu definidos no XML vault_menu.xml para a toolbar
     private fun setupToolbar() {
-        binding.toolbar.inflateMenu(R.menu.vault_menu)
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_generate -> {
