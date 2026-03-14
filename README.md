@@ -2,8 +2,8 @@
 
 **Course:** Desenvolvimento de Aplicações Móveis (DAM)  
 **Student:** A51394 Rafael Faustino  
-**Date:** 10/03/2026  
-**Repository URL:** https://github.com/GameDevRafael/DAM_TP1_MIP
+**Date:** 14/03/2026  
+**Repository URL:** https://github.com/rgtd-faustino/DAM_TP1_MIP
 
 ---
 
@@ -62,7 +62,7 @@ app/src/main/
 | Singleton | Gestores globais como `CryptoManager` |
 | Observer Pattern | Kotlin Flows para atualização dinâmica da UI |
 
-A arquitetura foi proposta pelo agente de IA, aprovada pelo aluno após revisão do plano de implementação, e validada para garantir a conformidade com as melhores práticas de desenvolvimento Android.
+A arquitetura foi proposta pelo agente de IA, aprovada pelo aluno após revisão do plano de implementação e validada para garantir a conformidade com as melhores práticas de desenvolvimento Android.
 
 ## 4. Implementação
 
@@ -79,7 +79,7 @@ A arquitetura foi proposta pelo agente de IA, aprovada pelo aluno após revisão
 
 ### Detalhe de Implementação
 
-A camada de persistência utiliza a biblioteca *Room* sobre uma base de dados SQLite, onde os campos sensíveis são guardados em formato Base64 após cifragem AES-GCM (256-bit). A lógica de negócio reside nos *ViewModels*, que interagem com o `VaultRepository`.
+A camada de persistência utiliza a biblioteca *Room* sobre uma base de dados SQLite onde os campos sensíveis são guardados em formato Base64 após cifragem AES-GCM (256-bit). A lógica da aplicação reside nos *ViewModels*, que interagem com o `VaultRepository`.
 
 A integração com a API externa é feita através de *Retrofit*, processando apenas os primeiros 5 caracteres do hash SHA-1 das passwords para manter o anonimato. O `CryptoManager.kt` demonstra a correta utilização do *AndroidKeyStore* para a gestão de chaves criptográficas de hardware.
 
@@ -92,9 +92,9 @@ A estratégia de testes centrou-se em validações manuais. Foram executados os 
 | Persistência de dados após encerramento | ✓ Passou |
 | Decifragem correta de campos sensíveis | ✓ Passou |
 | Password sem fugas detetadas | ✓ Passou |
-| Password comprometida ("123456") | ✓ "Pwned 1439 times! Change it." |
+| Password comprometida ("123456") | ✓ "Pwned 209972844 times! Change it." |
 
-O sistema demonstrou estabilidade em emuladores com API level 36 e dispositivo físico com Android 13.
+O sistema demonstrou estabilidade em emuladores e no dispositivo físico do aluno.
 
 ## 6. Instruções de Utilização
 
@@ -116,21 +116,13 @@ cd VaultGuard
 3. Não são necessárias chaves de API — a *HaveIBeenPwned* é acedida através de um endpoint público
 4. Executar a aplicação com **Run → Run 'app'** (ou `Shift+F10`) num dispositivo com Android 8.0+
 
-### Resolução de Problemas Comuns
-
-```bash
-./gradlew clean build
-```
-
-Em caso de problemas com o *KeyStore*, reiniciar o emulador garante a correta inicialização.
-
 ---
 
 # Autonomous Software Engineering Sections
 
 ## 7. Prompting Strategy
 
-O desenvolvimento utilizou o Google Antigravity (com modelo Gemini 1.5 Pro) e o Claude (Anthropic) via claude.ai. A estratégia de prompting foi definida com base no template fornecido pelo enunciado, estruturado em seis componentes:
+O desenvolvimento utilizou o Google Antigravity (com modelo Gemini 3.1 Pro) e o Claude (Anthropic) via claude.ai. A estratégia de prompting foi definida com base no template fornecido pelo enunciado, estruturado em seis componentes:
 
 | Componente | Descrição |
 |---|---|
@@ -141,7 +133,7 @@ O desenvolvimento utilizou o Google Antigravity (com modelo Gemini 1.5 Pro) e o 
 | Verification | Critérios de validação do código gerado |
 | Deliverables | Ficheiros e artefactos esperados |
 
-O prompt inicial foi elaborado com apoio do Claude, que ajudou a formular os requisitos técnicos de forma precisa antes de os submeter ao Antigravity. O agente foi configurado em modo Planning, o que o forçou a gerar um plano de implementação detalhado para aprovação antes de escrever qualquer código. Erros de compilação subsequentes foram reportados ao Antigravity em prompts de correção, colando o output de erro completo e solicitando a fix.
+O prompt inicial foi elaborado com apoio do Claude, que ajudou a formular os requisitos técnicos de forma precisa antes de os submeter ao Antigravity. O agente foi configurado em modo Planning, o que o forçou a gerar um plano de implementação detalhado para aprovação antes de escrever qualquer código. Erros de compilação subsequentes foram reportados ao Claude para o aluno entender melhor os problemas fazendo com que consiga reportar com clareza ao Antigravity prompts de correção.
 
 ## 8. Autonomous Agent Workflow
 
@@ -151,7 +143,7 @@ O Antigravity contribuiu em todas as fases do ciclo de desenvolvimento:
 Gerou um documento `implementation_plan.md` com arquitetura, estrutura de pastas, dependências e estratégia de encriptação, revisto e aprovado pelo aluno antes de qualquer geração de código.
 
 **Implementação:**  
-Gerou os 37 ficheiros do projeto, incluindo toda a lógica de cifragem, os ViewModels, os Fragments, os layouts XML e a configuração do Hilt.
+Gerou todos os ficheiros do projeto, incluindo toda a lógica de cifragem, os ViewModels, os Fragments, os layouts XML e a configuração do Hilt.
 
 **Debugging:**  
 Identificou e corrigiu autonomamente três problemas:
@@ -168,7 +160,7 @@ Identificou e corrigiu autonomamente três problemas:
 - Aprovar o plano de implementação
 - Aceitar os ficheiros gerados
 - Reportar os erros de compilação ao agente
-- Solicitar correções visuais na interface (contraste dos labels dos switches e cor dos títulos das páginas)
+- Solicitar correções visuais na interface (contraste dos labels dos switches, cor dos títulos das páginas, impossibilidade de ver as passwords escritas)
 
 ## 9. Verification of AI-Generated Artifacts
 
@@ -180,7 +172,7 @@ O código gerado foi verificado através de testes manuais na app em execução 
 - Verificação de breach com password conhecidamente comprometida
 - Geração de passwords com diferentes configurações de caracteres
 
-A análise do código foi feita ficheiro a ficheiro com apoio do Claude para garantir compreensão da lógica de encriptação AES-GCM, do fluxo de k-anonimato no HaveIBeenPwned, e da arquitetura MVVM implementada.
+A análise do código foi feita ficheiro a ficheiro com apoio do Claude para garantir compreensão da lógica de encriptação AES-GCM, do fluxo de k-anonimato no HaveIBeenPwned e da arquitetura MVVM implementada.
 
 ## 10. Human vs AI Contribution
 
@@ -211,36 +203,32 @@ O aluno assume a responsabilidade total pelo código produzido, reconhecendo que
 
 ## 12. Version Control and Commit History
 
-O repositório utiliza uma única branch `main`, adequada para um projeto de dimensão individual com âmbito académico. Os commits foram realizados de forma incremental, refletindo a progressão do trabalho: primeiro a submissão do código do projeto MIP, seguida de iterações sucessivas sobre o relatório README.md à medida que o documento foi sendo refinado e completado.
-
-Cada commit de documentação correspondeu a uma melhoria concreta — atualização de informação do estudante, correção do URL do repositório, e revisão de linguagem. Esta abordagem, embora simples, garante rastreabilidade das alterações e separação entre a entrega do código e a evolução da documentação.
+O repositório utiliza uma única branch `main`, adequada para um projeto de dimensão individual com âmbito académico. O commit inicial integrou logo o projeto concluído no repositório, com os seguintes commits a representarem refinamentos do mesmo e do readme. Em concreto, foi realizado um commit após a introdução do projeto no repositório que teve como objetivo atualizar o mesmo que visava possibilitar o utilizador de observar as passwords no seu vault, algo que anteriormente não era possível.
 
 ## 13. Difficulties and Lessons Learned
 
-O principal desafio técnico foi a resolução de erros de compilação causados por incompatibilidades entre o Android Gradle Plugin e o sistema de Data Binding, que exigiu a atualização da versão do AGP para 8.3.0. Outra dificuldade residiu na configuração inicial do Android Studio, que não reconhecia o projeto Gradle por ter sido aberta a pasta errada.
+O principal desafio técnico foi a resolução de erros de compilação causados por incompatibilidades entre o Android Gradle Plugin e o sistema de Data Binding, que exigiu a atualização da versão do AGP para 8.3.0. Outra dificuldade residiu na configuração inicial do Android Studio, que não reconhecia o projeto Gradle por ter sido aberta a pasta errada. Adicionalmente, o aluno aprendeu várias técnicas fundamentais do desenvolvimento Android, incluindo conceitos de encriptação (AES-GCM e hashing SHA), persistência de dados com SQLite através da biblioteca Room e o funcionamento de DAOs para acesso à base de dados. Foi também aprofundada a compreensão do fluxo técnico da aplicação, desde a interface construída com Fragments e Views até à base de dados, passando pelos ViewModels e pelo Repository, percebendo como a UI comunica com a camada de dados dentro da arquitetura MVVM.
 
-A aprendizagem mais relevante foi perceber que o valor do agente de IA não está apenas na geração de código, mas na capacidade de iterar rapidamente sobre erros — o que exige que o utilizador saiba identificar e comunicar os problemas corretamente.
+A aprendizagem mais relevante foi perceber que o valor do agente de IA não está apenas na geração de código, mas na capacidade de iterar rapidamente sobre erros, o que exige que o utilizador saiba identificar e comunicar os problemas corretamente.
 
 ### Conceitos Técnicos Esclarecidos
 
 **AndroidKeyStore e ALIAS:**  
-A dúvida inicial era se cada entrada guardada no cofre tinha o seu próprio ALIAS. O Claude esclareceu que todas as entradas partilham a mesma chave criptográfica e que o ALIAS é apenas o nome pelo qual o KeyStore identifica essa chave. O que torna cada cifragem única não é a chave, mas o IV aleatório gerado em cada operação — dois campos cifrados com a mesma chave produzem resultados completamente diferentes precisamente por causa disso.
+A dúvida inicial era se cada entrada guardada no cofre tinha o seu próprio ALIAS. O Claude esclareceu que todas as entradas partilham a mesma chave criptográfica e que o ALIAS é apenas o nome pelo qual o KeyStore identifica essa chave. O que torna cada cifragem única não é a chave, mas o IV aleatório gerado em cada operação: dois campos cifrados com a mesma chave produzem resultados completamente diferentes precisamente por causa disso.
 
 **Base64:**  
-Não era claro porque é que os dados cifrados eram convertidos para Base64 antes de serem guardados. O Claude explicou que a cifragem produz bytes arbitrários que não são texto válido — alguns podem corromper uma string em SQLite. O Base64 converte qualquer sequência de bytes em caracteres seguros (A-Z, a-z, 0-9, +, /), tornando o resultado guardável em qualquer campo de texto, ao custo de ocupar cerca de 33% mais espaço.
+Não era claro porque é que os dados cifrados eram convertidos para Base64 antes de serem guardados. O Claude explicou que a cifragem produz bytes arbitrários que não são texto válido: alguns podem corromper uma string em SQLite. O Base64 converte qualquer sequência de bytes em caracteres seguros (A-Z, a-z, 0-9, +, /), tornando o resultado guardável em qualquer campo de texto, ao custo de ocupar cerca de 33% mais espaço.
 
 **`id` vs `title`:**  
 Havia a ideia errada de que o `id` no método `getEntryById` correspondia ao título da entrada. O `id` é um número inteiro gerado automaticamente pelo Room para cada linha da tabela (1, 2, 3...) e não tem qualquer relação com o título. O título é o campo `title` — texto separado. O `id` serve apenas para identificar unicamente cada linha na base de dados.
 
 ### Aprendizagens sobre Trabalhar com IA
 
-Usar dois modelos com papéis distintos — Antigravity para gerar, Claude para explicar — revelou-se uma abordagem eficaz. O Antigravity gera rapidamente mas não explica; o Claude foi essencial para compreender o código gerado e formular prompts mais precisos. A combinação das duas ferramentas foi mais produtiva do que usar apenas uma.
+Usar dois modelos com papéis distintos — Antigravity para gerar, Claude para explicar — revelou-se uma abordagem eficaz. O Antigravity gera rapidamente mas não explica; o Claude foi essencial para compreender o código gerado e formular prompts mais precisas. A combinação das duas ferramentas foi mais produtiva do que usar apenas uma.
 
 ## 14. Future Improvements
 
 - **Autenticação biométrica:** Implementar via *BiometricPrompt* para substituição ou complemento do PIN
-- **Performance da RecyclerView:** Otimização com *DiffUtil* para atualizações incrementais da lista
-- **Testes unitários:** Implementação via *JUnit* para cobertura da lógica de negócio
 - **UI/UX:** Modo escuro dinâmico e animações nas transições entre fragmentos
 - **Cópias de segurança:** Exportação cifrada como objetivo a médio prazo
 
@@ -253,14 +241,10 @@ Este projeto foi desenvolvido com assistência obrigatória de ferramentas de in
 
 | Ferramenta | Utilização |
 |---|---|
-| **Google Antigravity** (Gemini 1.5 Pro) | Geração do código, arquitetura e correção de erros de compilação |
+| **Google Antigravity** (Gemini 3.1 Pro) | Geração do código, arquitetura e correção de erros de compilação |
 | **Claude (Anthropic)** via claude.ai | Apoio na formulação do prompt inicial, explicação dos ficheiros gerados e estudo do código |
 
-O aluno compreende o código gerado, é capaz de o explicar, e assume total responsabilidade pelo produto final. O código foi verificado e testado manualmente.
+O aluno compreende o código gerado, é capaz de o explicar e assume total responsabilidade pelo produto final. O código foi verificado e testado manualmente.
 
 **Relatório: [AC YES, AI YES]**  
-<<<<<<< HEAD
 A redação e estruturação deste relatório foi assistida pelo modelo **Claude (Anthropic)**. O aluno é totalmente responsável pelo conteúdo apresentado e confirma que o mesmo reflete com rigor o trabalho desenvolvido.
-=======
-A redação e estruturação deste relatório foi assistida pelo modelo **Claude (Anthropic)**. O aluno é totalmente responsável pelo conteúdo apresentado e confirma que o mesmo reflete com rigor o trabalho desenvolvido.
->>>>>>> 19502ed5b0bf007f80376c7205dfe5079436c0fa
